@@ -190,97 +190,95 @@ showData = (data) => {
 }
 
 // FETCH PRODUTS
-;(function () {
-  let urls = 'https://fakestoreapi.com/products/'
-  fetch(urls, {
-    method: 'GET',
-  })
-    .then(function (response) {
-      return response.json()
-    })
-    .then(showData)
-    .then((data) => {
-      let products = localStorage.getItem('products') ? JSON.parse(localStorage.getItem('products')) : []
-      let newArrayDiscount = localStorage.getItem('products') ? JSON.parse(localStorage.getItem('arrayDiscount')) : []
-      let arrayDiscount = [...newArrayDiscount]
-      let productArray = [...products]
-      let countProducts = products.length
-      buyProducts = (id, numberRadom) => {
-        productNoti.classList.add('product__noti-show')
-        setTimeout(() => {
-          productNoti.classList.remove('product__noti-show')
-        }, 3000)
-        productTotal.innerHTML = ++countProducts
-        localStorage.setItem('numberProducts', JSON.stringify(countProducts))
-        let result = data.filter((item) => {
-          return item.id === id
-        })
-        for (let i = 0; i < result.length; i++) {
-          productArray.push(result[i])
-          arrayDiscount.push(result[i].price > 100 ? numberRadom : 1)
-        }
-        localStorage.setItem('products', JSON.stringify(productArray))
-        localStorage.setItem('arrayDiscount', JSON.stringify(arrayDiscount))
-        console.log(arrayDiscount)
-        console.log(productArray)
-      }
-    })
-    .catch(function (err) {
-      console.log('Error:' + err)
-    })
-  productTotal.innerHTML = JSON.parse(localStorage.getItem('numberProducts'))
-})()
-window.addEventListener('scroll', function () {
+(async function () {
+  let urls = "https://fakestoreapi.com/products/";
+  let result = await fetch(urls, {
+    method: "GET",
+  });
+  const data = await result.json();
+  showData(data);
+  let products = localStorage.getItem("products")
+    ? JSON.parse(localStorage.getItem("products"))
+    : [];
+  let newArrayDiscount = localStorage.getItem("products")
+    ? JSON.parse(localStorage.getItem("arrayDiscount"))
+    : [];
+  let arrayDiscount = [...newArrayDiscount];
+  let productArray = [...products];
+  let countProducts = products.length;
+  buyProducts = (id, numberRadom) => {
+    productNoti.classList.add("product__noti-show");
+    setTimeout(() => {
+      productNoti.classList.remove("product__noti-show");
+    }, 3000);
+    productTotal.innerHTML = ++countProducts;
+    localStorage.setItem("numberProducts", JSON.stringify(countProducts));
+    let result = data.filter((item) => {
+      return item.id === id;
+    });
+    for (let i = 0; i < result.length; i++) {
+      productArray.push(result[i]);
+      arrayDiscount.push(result[i].price > 100 ? numberRadom : 1);
+    }
+    localStorage.setItem("products", JSON.stringify(productArray));
+    localStorage.setItem("arrayDiscount", JSON.stringify(arrayDiscount));
+    console.log(arrayDiscount);
+    console.log(productArray);
+  };
+
+  productTotal.innerHTML = JSON.parse(localStorage.getItem("numberProducts"));
+})();
+window.addEventListener("scroll", function () {
   if (this.pageYOffset > headerElement.getBoundingClientRect().height) {
-    btn.classList.add('fixed')
+    btn.classList.add("fixed");
     cusBtn.forEach((cusBtn) => {
-      cusBtn.classList.add('cus-btn')
-    })
-    headerElement.classList.add('header')
-    xText.style.color = 'rgb(14, 184, 226)'
-    logoSpan.style.color = 'white'
+      cusBtn.classList.add("cus-btn");
+    });
+    headerElement.classList.add("header");
+    xText.style.color = "rgb(14, 184, 226)";
+    logoSpan.style.color = "white";
     linkItemElement.forEach((link) => {
-      link.style.color = 'white'
-    })
-    contactElement.style.top = '450px'
+      link.style.color = "white";
+    });
+    contactElement.style.top = "450px";
   } else {
-    headerElement.classList.remove('header')
-    btn.classList.remove('fixed')
-    xText.style.color = ''
-    logoSpan.style.color = ''
+    headerElement.classList.remove("header");
+    btn.classList.remove("fixed");
+    xText.style.color = "";
+    logoSpan.style.color = "";
 
     cusBtn.forEach((cusBtn) => {
-      cusBtn.classList.remove('cus-btn')
-    })
+      cusBtn.classList.remove("cus-btn");
+    });
     linkItemElement.forEach((link) => {
-      link.style.color = ''
-    })
-    contactElement.style.top = '780px'
+      link.style.color = "";
+    });
+    contactElement.style.top = "780px";
   }
-})
-let products = JSON.parse(localStorage.getItem('products'))
-;(() => {
-  productTotal.innerHTML = products ? products.length : 0
-})()
-let productArray = products ? [...products] : []
-let countProducts = products ? products.length : 0
+});
+let products = JSON.parse(localStorage.getItem("products"));
+(() => {
+  productTotal.innerHTML = products ? products.length : 0;
+})();
+let productArray = products ? [...products] : [];
+let countProducts = products ? products.length : 0;
 
 function discount(item, numberRadom) {
-  let time = new Date()
-  let hour = time.getHours()
-  let minutes = time.getMinutes()
-  let seconds = time.getSeconds()
+  let time = new Date();
+  let hour = time.getHours();
+  let minutes = time.getMinutes();
+  let seconds = time.getSeconds();
 
   if (item.price > 100) {
-    return `<i class="fas fa-tags">${numberRadom} % </i>`
+    return `<i class="fas fa-tags">${numberRadom} % </i>`;
   } else {
-    return ''
+    return "";
   }
 }
 function count(item) {
   if (item.price > 100) {
-    return `<strike>${item.price}$</strike>`
+    return `<strike>${item.price}$</strike>`;
   } else {
-    return ''
+    return "";
   }
 }
